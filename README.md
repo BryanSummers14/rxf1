@@ -6,7 +6,7 @@ So hopefully this project just kinda gives an overall sense to how I approach re
 
 1. Code Organization: It's a pretty flat file structure that could greatly benefit from nx libs to break things out into more composable components.
 
-2. Naming: Wow is some of the naming back and inconsistent. Naming changed slightly as I understood the project, but why did I ever name anything a `SeasonRace`? Also should go back through and customize all the `MrData` to be more unique to the underlying data and why did I prefix the effects with `f1-season`?.
+2. Naming: Wow is some of the naming bad and inconsistent. Naming changed slightly as I understood the project better, but why did I ever name anything a `SeasonRace`? Also should go back through and customize all the `MrData` to be more unique to the underlying data and why did I prefix the effects with `f1-season`?.
 
 3. There's some code/logic duplication that feels off to me, an easy example would be the back button, but also the pagination logic seems duped a lot and I don't like how many subscriptions it takes.
 
