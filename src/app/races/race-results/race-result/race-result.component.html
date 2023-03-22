@@ -1,0 +1,14 @@
+<div class="race-result-card">
+  <ng-container *ngIf="raceResult">
+    <p>
+      #{{ raceResult.position }}: {{ raceResult.Driver.givenName }}
+      {{ raceResult.Driver.familyName }}
+    </p>
+    <p>Points: {{ raceResult.points }}</p>
+    <p *ngIf="raceResult.FastestLap?.Time?.time">
+      Fastest Lap: {{ raceResult.FastestLap?.Time?.time }}
+    </p>
+    <p>Laps: {{ raceResult.laps }}</p>
+    <p>Status: {{ raceResult.status }}</p>
+  </ng-container>
+</div>

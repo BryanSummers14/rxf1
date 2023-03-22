@@ -1,0 +1,21 @@
+<button class="back-button" (click)="backToRaces()">Races</button>
+<section class="race-qualifying-results-container">
+  <ng-container
+    *ngFor="let qualifyingResult of paginatedQualifyingRaceResults$ | async"
+  >
+    <rxf1-race-qualifying-result
+      [qualifyingResult]="qualifyingResult"
+    ></rxf1-race-qualifying-result>
+  </ng-container>
+</section>
+
+<ng-container *ngIf="paginationService.pagination$ | async as pagination">
+  <rxf1-pagination
+    [current]="pagination.cursor || 0"
+    [total]="(qualifyingRaceResults$ | async)?.length || 0"
+    [pageSize]="pagination.pageSize || 10"
+    (next)="paginationService.pageNext()"
+    (previous)="paginationService.pagePrevious()"
+    (pageSizeSelect)="paginationService.pageSizeSelect($event)"
+  ></rxf1-pagination>
+</ng-container>

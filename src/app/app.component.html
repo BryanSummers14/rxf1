@@ -1,1 +1,13 @@
-<rxf1-nx-welcome></rxf1-nx-welcome> <router-outlet></router-outlet>
+<section class="seasons-container">
+  <h3>Seasons:</h3>
+  <div class="season-section" *ngFor="let season of seasons$ | async">
+    <span class="season-title">{{ season }} Season</span>
+    <div class="button-group">
+      <button class="blue" (click)="getDrivers(season)">View Drivers</button>
+      <button (click)="getRaces(season)">View Races</button>
+    </div>
+  </div>
+</section>
+<section class="router-container">
+  <router-outlet></router-outlet>
+</section>

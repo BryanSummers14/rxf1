@@ -1,0 +1,13 @@
+<div class="qualifying-result-card">
+  <ng-container *ngIf="qualifyingResult">
+    <p>Number: {{ qualifyingResult.number }}</p>
+    <p>
+      #{{ qualifyingResult.position }}:
+      {{ qualifyingResult.Driver.givenName }}
+      {{ qualifyingResult.Driver.familyName }}
+    </p>
+    <p>Q1: {{ qualifyingResult.Q1 }}</p>
+    <p *ngIf="qualifyingResult.Q2">Q2: {{ qualifyingResult.Q2 }}</p>
+    <p *ngIf="qualifyingResult.Q3">Q3: {{ qualifyingResult.Q3 }}</p>
+  </ng-container>
+</div>

@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+.races-container {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  overflow-y: overlay;
+}
+
+.button-group {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-direction: column;
+}

@@ -1,0 +1,20 @@
+<section class="races-container">
+  <div class="race-card" *ngFor="let race of paginatedRaces$ | async">
+    {{ race.raceName }}
+    <div class="button-group">
+      <button (click)="viewRaceResults(race.round)">View Race Results</button>
+      <button (click)="viewQualResults(race.round)">View Qual Results</button>
+    </div>
+  </div>
+</section>
+
+<ng-container *ngIf="paginationService.pagination$ | async as pagination">
+  <rxf1-pagination
+    [current]="pagination.cursor || 0"
+    [total]="(races$ | async)?.length || 0"
+    [pageSize]="pagination.pageSize || 10"
+    (next)="paginationService.pageNext()"
+    (previous)="paginationService.pagePrevious()"
+    (pageSizeSelect)="paginationService.pageSizeSelect($event)"
+  ></rxf1-pagination>
+</ng-container>

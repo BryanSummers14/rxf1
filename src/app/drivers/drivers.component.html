@@ -1,0 +1,18 @@
+<section class="container">
+  <div class="card" *ngFor="let driver of paginatedDrivers$ | async">
+    <p>{{ driver.givenName }} {{ driver.familyName }}</p>
+    <p>Nationality: {{ driver.nationality }}</p>
+    <p>DOB: {{ driver.dateOfBirth | date : 'shortDate' }}</p>
+  </div>
+</section>
+
+<ng-container *ngIf="paginationService.pagination$ | async as pagination">
+  <rxf1-pagination
+    [current]="pagination.cursor || 0"
+    [total]="(drivers$ | async)?.length || 0"
+    [pageSize]="pagination.pageSize || 10"
+    (next)="paginationService.pageNext()"
+    (previous)="paginationService.pagePrevious()"
+    (pageSizeSelect)="paginationService.pageSizeSelect($event)"
+  ></rxf1-pagination>
+</ng-container>

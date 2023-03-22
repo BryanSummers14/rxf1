@@ -1,0 +1,29 @@
+<nav aria-label="Pagination">
+  <select (change)="onPageSizeChange($event)">
+    <option value="10">10</option>
+    <option value="15">15</option>
+    <option value="20">20</option>
+  </select>
+  <ul>
+    <li>
+      <button
+        aria-label="Go To Previous Page"
+        [attr.aria-disabled]="current - pageSize < 0"
+        [disabled]="current - pageSize < 0"
+        (click)="onPrevious()"
+      >
+        Previous
+      </button>
+    </li>
+    <li>
+      <button
+        aria-label="Go To Next Page"
+        [attr.aria-disabled]="current + pageSize >= total"
+        [disabled]="current + pageSize >= total"
+        (click)="onNext()"
+      >
+        Next
+      </button>
+    </li>
+  </ul>
+</nav>
