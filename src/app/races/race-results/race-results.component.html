@@ -1,9 +1,9 @@
 <button class="back-button" (click)="backToRaces()">Races</button>
-<div class="race-info" *ngIf="raceInfo$ | async as raceInfo">
+<div class="race-info" *ngIf="raceResults$ | async as raceInfo">
   <h3>Race Results Summary:</h3>
-  <p>Finished: {{ raceInfo.finished }}</p>
-  <p>Accidents: {{ raceInfo.accidents }}</p>
-  <p>+1 Laps: {{ raceInfo.plusOneLaps }}</p>
+  <p>Finished: {{ raceInfo.raceSummary.finished }}</p>
+  <p>Accidents: {{ raceInfo.raceSummary.accidents }}</p>
+  <p>+1 Laps: {{ raceInfo.raceSummary.plusOneLaps }}</p>
 </div>
 <section class="race-results-container">
   <ng-container *ngFor="let raceResult of paginatedRaceResults$ | async">
@@ -14,7 +14,7 @@
 <ng-container *ngIf="paginationService.pagination$ | async as pagination">
   <rxf1-pagination
     [current]="pagination.cursor || 0"
-    [total]="(raceResults$ | async)?.length || 0"
+    [total]="(raceResults$ | async)?.Results?.length || 0"
     [pageSize]="pagination.pageSize || 10"
     (next)="paginationService.pageNext()"
     (previous)="paginationService.pagePrevious()"

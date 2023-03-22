@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { QualifyingRace } from '../interfaces/qualifying-race.interface';
-import { Race } from '../interfaces/race.interface';
+import { RaceState } from '../interfaces/race.interface';
 import { SeasonRace } from '../interfaces/season-races.interface';
 
 export const fetchRaces = createAction(
@@ -25,7 +25,7 @@ export const setRaces = createAction(
 
 export const setRaceResults = createAction(
   '[Races State] Set Race Results',
-  props<{ raceResults: Race }>()
+  props<{ raceResults: RaceState }>()
 );
 
 export const setQualifyingResults = createAction(

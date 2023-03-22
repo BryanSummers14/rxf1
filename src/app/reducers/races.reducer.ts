@@ -5,12 +5,12 @@ import {
   setRaces,
 } from '../actions/races.actions';
 import { QualifyingRace } from '../interfaces/qualifying-race.interface';
-import { Race } from '../interfaces/race.interface';
+import { RaceState } from '../interfaces/race.interface';
 import { SeasonRace } from '../interfaces/season-races.interface';
 
 export type SeasonRaceState = {
   races: Array<SeasonRace>;
-  raceResults: Race;
+  raceResults: RaceState;
   qualifyingResults: QualifyingRace;
 };
 
@@ -34,6 +34,11 @@ export const initialRacesState: Readonly<SeasonRaceState> = {
         long: '',
         country: '',
       },
+    },
+    raceSummary: {
+      accidents: 0,
+      finished: 0,
+      plusOneLaps: 0,
     },
   },
   qualifyingResults: {

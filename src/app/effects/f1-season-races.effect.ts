@@ -11,7 +11,36 @@ import {
   setRaceResults,
   setRaces,
 } from '../actions/races.actions';
+import { RaceResult } from '../interfaces/race-result.interface';
 import { SeasonRacesApiService } from '../services/season-races-api.service';
+
+// @TODO break this out into a separate lib/file
+const enum RaceSummaryStatus {
+  FINISHED = 'Finished',
+  PLUS_ONE_LAP = '+1 Lap',
+  ACCIDENT = 'Collision|Collision damage',
+}
+
+const getRaceResultsSummary = (raceResults: RaceResult[]) =>
+  raceResults.reduce(
+    (raceSummary, race) => {
+      if (race.status === RaceSummaryStatus.FINISHED) {
+        raceSummary.finished += 1;
+        return raceSummary;
+      }
+      // Do plus 2 and plus 3 laps count? I honestly have no idea
+      if (race.status === RaceSummaryStatus.PLUS_ONE_LAP) {
+        raceSummary.plusOneLaps += 1;
+        return raceSummary;
+      }
+      if (RaceSummaryStatus.ACCIDENT.includes(race.status)) {
+        raceSummary.accidents += 1;
+        return raceSummary;
+      }
+      return raceSummary;
+    },
+    { accidents: 0, finished: 0, plusOneLaps: 0 }
+  );
 
 @Injectable()
 export class F1SeasonRacesEffect {
@@ -43,8 +72,12 @@ export class F1SeasonRacesEffect {
       exhaustMap(({ year, round }) =>
         this.seasonRacesService.fetchRaceResults({ year, round }).pipe(
           map((raceResultsData) => {
+            const race = raceResultsData.MRData.RaceTable.Races[0];
             return setRaceResults({
-              raceResults: raceResultsData.MRData.RaceTable.Races[0],
+              raceResults: {
+                ...race,
+                raceSummary: getRaceResultsSummary(race.Results),
+              },
             });
           }),
           catchError((error) =>
