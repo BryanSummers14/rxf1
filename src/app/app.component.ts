@@ -18,11 +18,11 @@ export class AppComponent implements OnInit {
     this.store.dispatch(fetchSeasons());
   }
 
-  getDrivers(year: string) {
+  viewDrivers(year: string) {
     this.router.navigate([year, 'drivers']);
   }
 
-  getRaces(year: string) {
+  viewRaces(year: string) {
     this.router.navigate([year, 'races']);
   }
 }

@@ -15,12 +15,12 @@ export class ApiService {
   // But I use fetch for when I 'fetch' resources across the wire
   // If I'm not going across the wire I use 'get'
   fetch<T>(url: string): Observable<T> {
-    // The most naive caching strategy possible, I would NEVER use this in production
+    // The most naive caching strategy possible
     // But I did run into issues making too many requests during dev and got timed out
     // For a bit, I do owe the API maintainer a tip or something
     // Since it's historical data and pretty static, should be fine for this particular use case
     if (this.cache.has(url)) {
-      return of(this.cache.get(url));
+      return of<T>(this.cache.get(url));
     }
     return this.httpClient.get<T>(`${this.baseURL}${url}`).pipe(
       tap((result) => {

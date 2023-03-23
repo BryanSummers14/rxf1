@@ -4,7 +4,7 @@ So hopefully this project just kinda gives an overall sense to how I approach re
 
 ## Things that need to be done to clean up the project
 
-1. Code Organization: It's a pretty flat file structure that could greatly benefit from nx libs to break things out into more composable components.
+1. Code Organization: It's a pretty flat file structure that could greatly benefit from nx libs to break things out into more composable components, something like this worked well at my last job https://nx.dev/more-concepts/library-types.
 
 2. Naming: Wow is some of the naming bad and inconsistent. Naming changed slightly as I understood the project better, but why did I ever name anything a `SeasonRace`? Also should go back through and customize all the `MrData` to be more unique to the underlying data and why did I prefix the effects with `f1-season`?.
 

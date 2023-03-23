@@ -3,8 +3,8 @@
   <div class="season-section" *ngFor="let season of seasons$ | async">
     <span class="season-title">{{ season }} Season</span>
     <div class="button-group">
-      <button class="blue" (click)="getDrivers(season)">View Drivers</button>
-      <button (click)="getRaces(season)">View Races</button>
+      <button class="blue" (click)="viewDrivers(season)">View Drivers</button>
+      <button (click)="viewRaces(season)">View Races</button>
     </div>
   </div>
 </section>
