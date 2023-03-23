@@ -1,9 +1,9 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { selectRaceResults } from 'src/app/selectors/races-selector';
 import { fetchRaceResults } from '../../actions/races.actions';
 import { PaginationComponent } from '../../pagination/pagination.component';
@@ -18,7 +18,7 @@ import { RaceResultComponent } from './race-result/race-result.component';
   templateUrl: './race-results.component.html',
   styleUrls: ['./race-results.component.scss'],
 })
-export class RaceResultsComponent implements OnInit {
+export class RaceResultsComponent implements OnInit, OnDestroy {
   store = inject(Store);
   route = inject(ActivatedRoute);
   router = inject(Router);
@@ -38,16 +38,25 @@ export class RaceResultsComponent implements OnInit {
     )
   );
 
+  private onDestroy$ = new Subject<void>();
+
   ngOnInit(): void {
-    this.route.paramMap.pipe(distinctUntilChanged()).subscribe({
-      next: (params) => {
-        const year = params.get('year');
-        const round = params.get('round');
-        if (year && round) {
-          this.store.dispatch(fetchRaceResults({ year, round }));
-        }
-      },
-    });
+    this.route.paramMap
+      .pipe(distinctUntilChanged(), takeUntil(this.onDestroy$))
+      .subscribe({
+        next: (params) => {
+          const year = params.get('year');
+          const round = params.get('round');
+          if (year && round) {
+            this.store.dispatch(fetchRaceResults({ year, round }));
+          }
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   backToRaces() {

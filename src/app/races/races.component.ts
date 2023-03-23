@@ -1,8 +1,15 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, distinctUntilChanged, map, share } from 'rxjs';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  map,
+  share,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { fetchRaces } from '../actions/races.actions';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { PaginationService } from '../pagination/pagination.service';
@@ -16,7 +23,7 @@ import { selectRaces } from '../selectors/races-selector';
   providers: [PaginationService],
   imports: [AsyncPipe, NgIf, NgFor, RouterModule, PaginationComponent],
 })
-export class RacesComponent implements OnInit {
+export class RacesComponent implements OnInit, OnDestroy {
   store = inject(Store);
   route = inject(ActivatedRoute);
   router = inject(Router);
@@ -35,15 +42,24 @@ export class RacesComponent implements OnInit {
     )
   );
 
+  private onDestroy$ = new Subject<void>();
+
   ngOnInit(): void {
-    this.route.paramMap.pipe(distinctUntilChanged()).subscribe({
-      next: (params) => {
-        const year = params.get('year');
-        if (year) {
-          this.store.dispatch(fetchRaces({ year }));
-        }
-      },
-    });
+    this.route.paramMap
+      .pipe(distinctUntilChanged(), takeUntil(this.onDestroy$))
+      .subscribe({
+        next: (params) => {
+          const year = params.get('year');
+          if (year) {
+            this.store.dispatch(fetchRaces({ year }));
+          }
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   viewRaceResults(round: string) {

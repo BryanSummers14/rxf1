@@ -1,5 +1,5 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
@@ -8,6 +8,8 @@ import {
   map,
   Observable,
   share,
+  Subject,
+  takeUntil,
 } from 'rxjs';
 import { selectQualifyingResults } from 'src/app/selectors/races-selector';
 import { fetchRaceQualifyingResults } from '../../actions/races.actions';
@@ -31,7 +33,7 @@ import { QualifyingResultComponent } from './race-qualifying-result/race-qualify
   templateUrl: './race-qualifying-results.component.html',
   styleUrls: ['./race-qualifying-results.component.scss'],
 })
-export class RaceQualifyingResultsComponent implements OnInit {
+export class RaceQualifyingResultsComponent implements OnInit, OnDestroy {
   store = inject(Store);
   route = inject(ActivatedRoute);
   router = inject(Router);
@@ -59,16 +61,25 @@ export class RaceQualifyingResultsComponent implements OnInit {
     )
   );
 
+  private onDestroy$ = new Subject<void>();
+
   ngOnInit(): void {
-    this.route.paramMap.pipe(distinctUntilChanged()).subscribe({
-      next: (params) => {
-        const year = params.get('year');
-        const round = params.get('round');
-        if (year && round) {
-          this.store.dispatch(fetchRaceQualifyingResults({ year, round }));
-        }
-      },
-    });
+    this.route.paramMap
+      .pipe(distinctUntilChanged(), takeUntil(this.onDestroy$))
+      .subscribe({
+        next: (params) => {
+          const year = params.get('year');
+          const round = params.get('round');
+          if (year && round) {
+            this.store.dispatch(fetchRaceQualifyingResults({ year, round }));
+          }
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   backToRaces() {
