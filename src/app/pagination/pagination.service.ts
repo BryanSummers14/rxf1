@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, share, tap } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 type PaginatorState = {
   pageSize: number;
@@ -41,5 +42,16 @@ export class PaginationService {
       // But I figured best to just reset the cursor, at least for now
       cursor: 0,
     });
+  }
+
+  getPaginatedResults<T>(results$: Observable<T[]>): Observable<T[]> {
+    return combineLatest([results$, this.pagination$]).pipe(
+      map(([results, paginationState]) =>
+        results.slice(
+          paginationState.cursor,
+          paginationState.cursor + paginationState.pageSize
+        )
+      )
+    );
   }
 }

@@ -2,14 +2,7 @@ import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  combineLatest,
-  distinctUntilChanged,
-  map,
-  share,
-  Subject,
-  takeUntil,
-} from 'rxjs';
+import { distinctUntilChanged, share, Subject, takeUntil } from 'rxjs';
 import { fetchDrivers } from '../actions/drivers.actions';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { PaginationService } from '../pagination/pagination.service';
@@ -29,17 +22,7 @@ export class DriversComponent implements OnInit, OnDestroy {
   paginationService = inject(PaginationService);
   drivers$ = this.store.select(selectDrivers).pipe(share());
 
-  paginatedDrivers$ = combineLatest([
-    this.drivers$,
-    this.paginationService.pagination$,
-  ]).pipe(
-    map(([drivers, paginationState]) =>
-      drivers.slice(
-        paginationState.cursor,
-        paginationState.cursor + paginationState.pageSize
-      )
-    )
-  );
+  paginatedDrivers$ = this.paginationService.getPaginatedResults(this.drivers$);
 
   private onDestroy$ = new Subject<void>();
 

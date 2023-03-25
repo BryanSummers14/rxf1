@@ -49,17 +49,10 @@ export class RaceQualifyingResultsComponent implements OnInit, OnDestroy {
       share()
     );
 
-  paginatedQualifyingRaceResults$ = combineLatest([
-    this.qualifyingRaceResults$,
-    this.paginationService.pagination$,
-  ]).pipe(
-    map(([qualfyingRaces, paginationState]) =>
-      qualfyingRaces.slice(
-        paginationState.cursor,
-        paginationState.cursor + paginationState.pageSize
-      )
-    )
-  );
+  paginatedQualifyingRaceResults$ =
+    this.paginationService.getPaginatedResults<QualifyingResult>(
+      this.qualifyingRaceResults$
+    );
 
   private onDestroy$ = new Subject<void>();
 

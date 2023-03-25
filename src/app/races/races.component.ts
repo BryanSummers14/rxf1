@@ -2,14 +2,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  combineLatest,
-  distinctUntilChanged,
-  map,
-  share,
-  Subject,
-  takeUntil,
-} from 'rxjs';
+import { distinctUntilChanged, share, Subject, takeUntil } from 'rxjs';
 import { fetchRaces } from '../actions/races.actions';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { PaginationService } from '../pagination/pagination.service';
@@ -30,17 +23,7 @@ export class RacesComponent implements OnInit, OnDestroy {
   paginationService = inject(PaginationService);
   races$ = this.store.select(selectRaces).pipe(share());
 
-  paginatedRaces$ = combineLatest([
-    this.races$,
-    this.paginationService.pagination$,
-  ]).pipe(
-    map(([races, paginationState]) =>
-      races.slice(
-        paginationState.cursor,
-        paginationState.cursor + paginationState.pageSize
-      )
-    )
-  );
+  paginatedRaces$ = this.paginationService.getPaginatedResults(this.races$);
 
   private onDestroy$ = new Subject<void>();
 
