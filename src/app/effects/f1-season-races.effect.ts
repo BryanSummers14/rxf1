@@ -53,6 +53,10 @@ export class F1SeasonRacesEffect {
       ofType(fetchRaces),
       exhaustMap(({ year }) =>
         this.seasonRacesService.fetchSeasonRaces(year).pipe(
+          // Here would be an ok place to switchmap and fetch all the results
+          // For each race, but with it being a public api, I decided against
+          // Fetching and batching with a forkJoin since it seemed to overload the server
+          // Same with qualifying.
           map((raceData) => {
             return setRaces({
               races: raceData,
